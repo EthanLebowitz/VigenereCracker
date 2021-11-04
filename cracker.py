@@ -2,7 +2,6 @@
 from scipy.stats import chisquare
 from tqdm import tqdm
 
-cipherText = "VRDMVDVHUEYJBMPTFAEAUPSKPIVPKNVGBLOAKJBADKKYQWXWJUZADZVJFZCGEQIWQSMYZWELYCTXERQFFJELJBBTVJVGBQXMEHBUOVSYDIEKVNIMSJEUNMSKEIUIGGIXJVDZVYOOVAJBEQMLZIOIBQNBBBIGLLFXVQZHTCBHICTMSLYIVORLKBBBCMIYMGKDCNIMGGIEJXELZHUWDZZMBTBWRXZEYMCXZQODUGFIZAQTBQPARGUPOXZLTBYFVNPAETDCUBRAJGFACSXYPNMGLLTMDZZMJAFSCCEAKQJNIMKXFLFUOFKCPVOVGYSAYFSOUBYSTBJMFWJODPKVVFJKSGLMNMKDPIVUEKKMVJWAKUQZYYIUNBRSKMFXKJRNFADZZMNMCKRAFQXLFQPZNKXCWMXSEYOOVAJBEQMLZIOIBQNCUPYMKBBZNUFXJVQLYYJVNATYTWPLYYTXKUVMJNIGLXPVYLYUWMKLVRUNSDVIGIVDKBFMXYCCTPGGIXTASEGFZICCKBFXKJRJSWPWJMJWXSCUOLRWNCMTQAMYZWEGEYUPOXZLTBZWIMPVDGGLPLEUVUTWVMKCPVDZRNTMZSIUUMCSKFFICLYUMNYXKBFEYJUMDWBJVWUTIAJNIMGAEHFZ"
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 englishFrequencies = [.0820, .0150, .0280, .0430, .130, .0220, .0200, .0610, .0700, .0015, .0077, .0400, .0240, .0670, .0750, .0190, .01, .0600, .0630, .0910, .0280, .0098, .0240, .0015, .0200, .0007] # from https://en.wikipedia.org/wiki/Letter_frequency
 
@@ -53,9 +52,6 @@ class CaesarCipherDecoder:
         shiftNum = self.getShiftNumber(cipherText)
         plainText = self.decode(cipherText, shiftNum)
         return plainText
-        
-#caesarCracker = CaesarCipherDecoder()
-#print(caesarCracker.crack(("pm ol ohk hufaopun jvumpkluaphs av zhf, ol dyval pa pu jpwoly, aoha pz, if zv johunpun aol vykly vm aol slaalyz vm aol hswohila, aoha uva h dvyk jvbsk il thkl vba.").upper()))
 
 class ViganereCipherDecoder:
 
@@ -109,49 +105,8 @@ class ViganereCipherDecoder:
         plainText = self.assemble(splitPlainText)
         return plainText
         
-class WordSplitter:
-    
-    def __init__(self, text):
-        print("prepping dictionary...")
-        wordFile = open("dictionary.txt", "r")
-        mixedCaseWords = wordFile.readlines()
-        wordFile.close()
-        self.words = [word.rstrip().upper() for word in tqdm(mixedCaseWords)]
-        for word in tqdm(self.words):
-            if not self.isWordValid(word):
-                self.words.remove(word)
-        self.words = sorted(self.words, key=len)
-        self.words.reverse() # longest words first
-        self.text = text
         
-                    
-    def isWordValid(self, word): # does it contain no special characters
-        for character in word:
-            if character not in alphabet:
-                return False
-        return True
-        
-    def findNextWord(self, text):
-        for word in self.words:
-            if text[:len(word)] == word:
-                return word
-        
-    def splitText(self):
-        text = self.text
-        splitText = ""
-        split = False
-        print("splitting text...")
-        while not split:
-            nextWord = self.findNextWord(text)
-            splitText = splitText + nextWord + " "
-            text = text[len(nextWord):]
-            if len(text)==0:
-                split = True
-        return splitText
-        
-cracker = ViganereCipherDecoder(cipherText)
-plainText = cracker.crack()
-print(plainText)
-splitter = WordSplitter(plainText)
-splitText = splitter.splitText()
-print(splitText)
+if __name__ == "__main__":
+    cracker = ViganereCipherDecoder("VRDMVDVHUEYJBMPTFAEAUPSKPIVPKNVGBLOAKJBADKKYQWXWJUZADZVJFZCGEQIWQSMYZWELYCTXERQFFJELJBBTVJVGBQXMEHBUOVSYDIEKVNIMSJEUNMSKEIUIGGIXJVDZVYOOVAJBEQMLZIOIBQNBBBIGLLFXVQZHTCBHICTMSLYIVORLKBBBCMIYMGKDCNIMGGIEJXELZHUWDZZMBTBWRXZEYMCXZQODUGFIZAQTBQPARGUPOXZLTBYFVNPAETDCUBRAJGFACSXYPNMGLLTMDZZMJAFSCCEAKQJNIMKXFLFUOFKCPVOVGYSAYFSOUBYSTBJMFWJODPKVVFJKSGLMNMKDPIVUEKKMVJWAKUQZYYIUNBRSKMFXKJRNFADZZMNMCKRAFQXLFQPZNKXCWMXSEYOOVAJBEQMLZIOIBQNCUPYMKBBZNUFXJVQLYYJVNATYTWPLYYTXKUVMJNIGLXPVYLYUWMKLVRUNSDVIGIVDKBFMXYCCTPGGIXTASEGFZICCKBFXKJRJSWPWJMJWXSCUOLRWNCMTQAMYZWEGEYUPOXZLTBZWIMPVDGGLPLEUVUTWVMKCPVDZRNTMZSIUUMCSKFFICLYUMNYXKBFEYJUMDWBJVWUTIAJNIMGAEHFZ")
+    plainText = cracker.crack()
+    print(plainText)
